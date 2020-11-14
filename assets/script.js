@@ -45,11 +45,6 @@ const check = function() {
 		if (flag1) { text.textContent = `${flag2}'s won the game!`; }
 		else if (flag3) { text.textContent = `Stalemate!`; }
 	}
-
-	// Also check for stalemates
-
-	// If game is won
-	// reset.style.display = "inline";
 }
 
 const init = function() {
