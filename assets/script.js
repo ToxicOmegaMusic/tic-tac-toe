@@ -2,19 +2,50 @@ let tiles = [];
 let text = document.querySelector("#textArea");
 let turn = undefined;
 let reset = document.querySelector("#reset");
+let gameOver = undefined;
 
 const clickTile = function(x) {
-	let tID = x.id.substring(1);
-	if (tiles[tID-1].textContent == "") {
-		tiles[tID-1].textContent = turn ? "X" : "O";
-		text.textContent = `It is ${(turn = !turn) ? "X" : "O"}'s turn!`;
+	if (!gameOver) {
+		let tID = x.id.substring(1);
+		if (tiles[tID].textContent == "") {
+			tiles[tID].textContent = turn ? "X" : "O";
+			text.textContent = `It is ${(turn = !turn) ? "X" : "O"}'s turn!`;
+		}
+		check();
 	}
-	check();
 }
 
 const check = function() {
+	let flag1 = false;
+	let flag2 = undefined;
+	let flag3 = undefined;
+	let cTile = "O";
 
-	// Check if the game is won and which player would be the winner
+	for (let i = 0; i < 2; i++) {
+		if (tiles[0].textContent == cTile && tiles[1].textContent == cTile && tiles[2].textContent == cTile) { flag1 = true; flag2 = cTile; }
+		else if (tiles[3].textContent == cTile && tiles[4].textContent == cTile && tiles[5].textContent == cTile) { flag1 = true; flag2 = cTile; }
+		else if (tiles[6].textContent == cTile && tiles[7].textContent == cTile && tiles[8].textContent == cTile) { flag1 = true; flag2 = cTile; }
+		else if (tiles[0].textContent == cTile && tiles[3].textContent == cTile && tiles[6].textContent == cTile) { flag1 = true; flag2 = cTile; }
+		else if (tiles[1].textContent == cTile && tiles[4].textContent == cTile && tiles[7].textContent == cTile) { flag1 = true; flag2 = cTile; }
+		else if (tiles[2].textContent == cTile && tiles[5].textContent == cTile && tiles[8].textContent == cTile) { flag1 = true; flag2 = cTile; }
+		else if (tiles[0].textContent == cTile && tiles[4].textContent == cTile && tiles[8].textContent == cTile) { flag1 = true; flag2 = cTile; }
+		else if (tiles[2].textContent == cTile && tiles[4].textContent == cTile && tiles[6].textContent == cTile) { flag1 = true; flag2 = cTile; }
+		cTile = "X";
+	}
+	
+	if (!flag1) {
+		flag3 = true;
+		for (tile of tiles) { if (tile.textContent == "") { flag3 = false; } }
+	}
+
+	if (flag1 || flag3) {
+		gameOver = true;
+		reset.style.display = "inline";
+
+		if (flag1) { text.textContent = `${flag2}'s won the game!`; }
+		else if (flag3) { text.textContent = `Stalemate!`; }
+	}
+
 	// Also check for stalemates
 
 	// If game is won
@@ -22,6 +53,7 @@ const check = function() {
 }
 
 const init = function() {
+	gameOver = false;
 	reset.style.display = "none";
 	tiles = [];
 	for (tile of document.querySelectorAll(".tile")) {
